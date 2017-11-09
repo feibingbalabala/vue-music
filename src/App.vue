@@ -1,11 +1,10 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <router-view/>
+   hello word
   </div>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
 export default {
   name: 'app'
 }

@@ -5,6 +5,7 @@ const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
 
 function resolve (dir) {
+  // __dirname 这个代表当前目录
   return path.join(__dirname, '..', dir)
 }
 
@@ -22,7 +23,8 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {
-      '@': resolve('src'),
+      'src': resolve('src'),
+      'common': resolve('src/common'),
     }
   },
   module: {
