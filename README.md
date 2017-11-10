@@ -31,9 +31,13 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 2、npm init webpack vue-music 建立一个项目文件（生成一个vue-music的文件夹）,之后跳出的都直接回车。
 3、cd vue-music 后执行 npm install 下载依赖
 4、项目用的是stylus 所注意package.json需要修改
+      dependencies下新增
+      "babel-runtime": "^6.0.0", // 语法转义
+      "fastclick": "^1.0.6" // 移动端点击300ms延迟问题。
       devDependencies下新增
       "stylus": "^0.54.5",
-      "stylus-loader": "^2.1.1"。
+      "stylus-loader": "^2.1.1",
+      "babel-polyfill": "^6.2.0",// es6语法转义。
     .eslintrc.js下新增
       // 不检查js文件最后一行的空格
       'eol-last': 0,
@@ -41,3 +45,14 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
       'space-before-function-paren': 0。
     配置一个路径别名
     在build/webpack.base.conf.js中resolve.alias添加新的别名，其中resolve函数中__dirname为当前目录
+路由配置：
+新建了五个组件(singer,recommend,search,rank,tab)
+修改了路由的配置，
+  1、routes: [
+    {
+      // 根目录，页面默认进入的
+      path: '/',
+      rediect: 'Recommend'
+    }
+  ]。
+  2、tab组件样式中添加.router-link-active作为页面跳转时选中的导航栏样式。
