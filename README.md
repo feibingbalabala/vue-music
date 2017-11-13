@@ -25,7 +25,7 @@ npm test
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
-
+``` bash
 初始化项目：
 1、npm instal --goabal vue-cli 全局安装cli脚手架。
 2、npm init webpack vue-music 建立一个项目文件（生成一个vue-music的文件夹）,之后跳出的都直接回车。
@@ -34,6 +34,8 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
       dependencies下新增
       "babel-runtime": "^6.0.0", // 语法转义
       "fastclick": "^1.0.6" // 移动端点击300ms延迟问题。
+      "jsonp": "0.2.1", // json插件
+      "better-scroll": "^0.1.15"
       devDependencies下新增
       "stylus": "^0.54.5",
       "stylus-loader": "^2.1.1",
@@ -56,3 +58,4 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
     }
   ]。
   2、tab组件样式中添加.router-link-active作为页面跳转时选中的导航栏样式。
+```

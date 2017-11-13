@@ -11,7 +11,7 @@ export default new Router({
     {
       // 根目录，页面默认进入的
       path: '/',
-      rediect: 'Recommend'
+      redirect: '/recommend'
     },
     {
       path: '/recommend',
