@@ -59,7 +59,14 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
   ]。
   2、tab组件样式中添加.router-link-active作为页面跳转时选中的导航栏样式。
 轮播图组件制作：
-  注意click事件和faskclick的冲突，
+  注意click事件和faskclick的冲突，这里如果click事件一定需要派发的话，可以在点击区域加上class="needsclick" 这样Fastclick就不会去监听这个事件，
   mounted：是类似jq的ready,但是DOM生成的时候，由于数据是异步加载经来的所以存在，异步加载的dom还没执行，用setTimeOut做个延迟。
   destroyed：Vue 实例销毁后调用。调用后，Vue 实例指示的所有东西都会解绑定，所有的事件监听器会被移除，所有的子实例也会被销毁。(组件销毁，我的理解是在可视区域看不到了。)
+数据歌单列表：
+  getDiscList是数据分发的接口(我的理解可以作为一个前端解决跨域的方案，有待考证)。
+  v-html就像innerHTML方法直接将HTML插入。
+  css中使用了box-align:center，这个属性可以让内部元素垂直居中，不支持ie
+      flex-direction: column；justify-content: center元素纵向居中（属于flex的一种方式）
+scroll组件抽象：
+  better-scroll插件需要获取页面的高度，由于页面的高度是由数据和图片高度撑开的所以要注意判断图片和异步数据是否过来，在图片添加了load事件，用一个变量控制了load的加载次数。
 ```
