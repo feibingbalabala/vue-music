@@ -58,4 +58,8 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
     }
   ]。
   2、tab组件样式中添加.router-link-active作为页面跳转时选中的导航栏样式。
+轮播图组件制作：
+  注意click事件和faskclick的冲突，
+  mounted：是类似jq的ready,但是DOM生成的时候，由于数据是异步加载经来的所以存在，异步加载的dom还没执行，用setTimeOut做个延迟。
+  destroyed：Vue 实例销毁后调用。调用后，Vue 实例指示的所有东西都会解绑定，所有的事件监听器会被移除，所有的子实例也会被销毁。(组件销毁，我的理解是在可视区域看不到了。)
 ```

@@ -3,7 +3,9 @@
     <!-- 这里vue放弃了m-header的写法,尽量采用驼峰写法 -->
    <Mheader></Mheader>
    <Tab></Tab>
-   <router-view></router-view>
+   <keep-alive>
+    <router-view></router-view>
+   </keep-alive>
   </div>
 </template>
 
