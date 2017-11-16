@@ -69,4 +69,7 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
       flex-direction: column；justify-content: center元素纵向居中（属于flex的一种方式）
 scroll组件抽象：
   better-scroll插件需要获取页面的高度，由于页面的高度是由数据和图片高度撑开的所以要注意判断图片和异步数据是否过来，在图片添加了load事件，用一个变量控制了load的加载次数。
+Loading：
+  vue中loading的制作会比想象中的简单，在jq中，同步数据你要判断页面的高度，load事件，用计时器控制延迟加载。
+  vue中只需要判断加载数据的长度就可以了，如果数据的长度没有获取到，继续loading
 ```
