@@ -72,4 +72,8 @@ scroll组件抽象：
 Loading：
   vue中loading的制作会比想象中的简单，在jq中，同步数据你要判断页面的高度，load事件，用计时器控制延迟加载。
   vue中只需要判断加载数据的长度就可以了，如果数据的长度没有获取到，继续loading
+listview组件：
+  组件的使用：如果引用时采用的是ListView，那在template中就需要使用<list-view>。如果只是Listview，那<listview>就可以了，注意大小写。
+  在watch中检测data的参数，可以使用data中的参数名称+()括号内写入型参可以传入data中值的变化。
+  `translate3d(0, ${fixedTop}px, 0)`es6的字符串模版。注意左右两边符号。
 ```
