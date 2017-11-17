@@ -76,4 +76,50 @@ listview组件：
   组件的使用：如果引用时采用的是ListView，那在template中就需要使用<list-view>。如果只是Listview，那<listview>就可以了，注意大小写。
   在watch中检测data的参数，可以使用data中的参数名称+()括号内写入型参可以传入data中值的变化。
   `translate3d(0, ${fixedTop}px, 0)`es6的字符串模版。注意左右两边符号。
+配置子路由：
+  src/router/index.js下的singer配置子路由。
+  import SingerDetaul from 'components/singer-detail/singer-detail'
+  routes: [
+    {
+      path: '/singer',
+      component: Singer,
+      children: [
+        {
+          path: ':id', //子路由的路径
+          component: SingerDetaul //子路由的模版
+        }
+      ]
+    }
+  ]
+  js的页面跳转可以使用this.$router.push({path: '路径'})
+vuex：
+  把信息，状态保存在同一个内存state里面，然后映射到vue的组件上，然后dispatch一个acition(用户的各种操作)，然后commit一个mutation，然后又反映到state上。也可以不通过dispatch直接commit一个mutation。
+  解决：
+  1、多个组件的数据共享。
+  2、路由中复杂数据传输。
+
+  export const singer = state => state.singer 
+    尖头函数的缩写，传递state return state.singer
+  import * as getters from './getters'
+    这样就可以在下面使用getters.方法去调用。
+  vuex的debug模式
+    线下调试
+    const debug = process.env.NODE_ENV !== 'production'
+    'production': npm run build环境
+    'dev': npm run dev环境
+    export default new Vuex.store({
+      getters,
+      strict: debug
+    })
+
+    import createLogger from 'vuex/dist/logger'
+      每次通过mutation修改state时会在控制台打印出对应的东西。
+    import {mapMutations} from 'vuex'
+      vuex的语法糖（这种内置的方法就称为语法糖，我是这么理解的，有待考证）
+      methods: {
+        ...mapMutations({
+          setSinger: 'SET_SINGER'
+        })
+      }
+      拓展运算符的方式做对象映射，使代码更简洁
 ```
