@@ -97,6 +97,14 @@ vuex：
   解决：
   1、多个组件的数据共享。
   2、路由中复杂数据传输。
+  目录结构：
+  src/store
+    index.js // 入口文件
+    state.js // 状态管理
+    mutation.js // mutation修改的操作
+    mutation-types.js // mutation相关的字符串常量
+    action.js // 异步操作
+    getters.js // 对state做一些映射,希望从getters中取state的参数
 
   export const singer = state => state.singer 
     尖头函数的缩写，传递state return state.singer
@@ -122,4 +130,6 @@ vuex：
         })
       }
       拓展运算符的方式做对象映射，使代码更简洁
+    
+    在singer-detail，中由于singer.id是通过vuex传输的，一旦用户强制刷新了页面。就会导致内存中的vuex保存singer.id消失，而找不到，有一种做法是直接保存为路由参数，这样在赋值的时候就可以this.$router.param.id去查找。
 ```
