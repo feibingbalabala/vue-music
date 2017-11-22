@@ -103,9 +103,15 @@ vuex：
     state.js // 状态管理
     mutation.js // mutation修改的操作
     mutation-types.js // mutation相关的字符串常量
-    action.js // 异步操作
+    action.js // 异步操作或是mutation封装（一个操作需要调用多个mutaition的时候）
     getters.js // 对state做一些映射,希望从getters中取state的参数
-
+  
+  vuex的使用逻辑
+    首先在state.js定义原始数据；
+    在getters.js做一个数据的映射，根据state.js做一个计算或是复杂的判断逻辑；
+    定义mutation-types.js需要哪些修改动作；
+    在mutation.js对接收到的数据，对state进行修改。
+  
   export const singer = state => state.singer 
     尖头函数的缩写，传递state return state.singer
   import * as getters from './getters'
@@ -126,10 +132,29 @@ vuex：
       vuex的语法糖（这种内置的方法就称为语法糖，我是这么理解的，有待考证）
       methods: {
         ...mapMutations({
-          setSinger: 'SET_SINGER'
+          setSinger: 'SET_SINGER' // 设置mutation
         })
-      }
+      },
+      computed: {
+        ...mapGetters([ // 得到mutation
+          'fullScreen',
+          'playList',
+          'currentSong'
+        ])
+      },
       拓展运算符的方式做对象映射，使代码更简洁
     
     在singer-detail，中由于singer.id是通过vuex传输的，一旦用户强制刷新了页面。就会导致内存中的vuex保存singer.id消失，而找不到，有一种做法是直接保存为路由参数，这样在赋值的时候就可以this.$router.param.id去查找。
+
+音乐播放器的使用
+    this.$emit('select', item, index)对外派发一个事件。父元素可监听这个事件
+
+动画的使用(player.vue)
+  使用了一个第三方js的动画库 create-keyframe-animation
+  这里用到了vue的js动画钩子我觉得可以理解成jq的animate
+    @enter="enter"
+    @after-enter="afterEnter"
+    @leave="leave"
+    @after-leave="afterLeave"
+  便可以在methods: {}中使用，其中enter(el, done)和leave(el, done)中done作为一个回调函数，执行完enter后会执行after-enter，leave也一样。this.$refs.cdWrapper.addEventListener('transitionend', done)使用transitionend监听done的执行
 ```

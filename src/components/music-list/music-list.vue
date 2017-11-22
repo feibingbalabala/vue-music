@@ -16,7 +16,7 @@
     <div class="bg-layer" ref="layer"></div>
     <scroll @scroll="scroll" :probe-type='probeType' :listen-scroll='listenScroll' :data="songs" class="list" ref="list">
       <div class="song-list-wrapper">
-        <song-list :songs="songs"></song-list>
+        <song-list @select="selectItem" :songs="songs"></song-list>
       </div>
       <div class="loading-container" v-show="!songs.length">
         <loading></loading>
@@ -28,8 +28,12 @@
   import Scroll from '../../base/scroll/scroll'
   import songList from '../../base/song-list/song-list'
   import Loading from '../../base/loading/loading'
+  import {prefixStyle} from '../../common/js/dom'
+  import {mapActions} from 'vuex'
 
   const RESERVED_HEIGHT = 40
+  const transform = prefixStyle('transform')
+  const backdrop = prefixStyle('backdrop-filter')
 
   export default {
     props: {
@@ -62,7 +66,16 @@
       },
       back() {
         this.$router.back()
-      }
+      },
+      selectItem(item, index) {
+        this.selectPlay({
+          list: this.songs,
+          index: index
+        })
+      },
+      ...mapActions([
+        'selectPlay'
+      ])
     },
     created() {
       this.probeType = 3
@@ -79,8 +92,7 @@
         let zIndex = 0
         let scale = 1
         let blur = 0
-        this.$refs.layer.style['transform'] = `translate3d(0,${translateY}px,0)`
-        this.$refs.layer.style['webkitTransform'] = `translate3d(0,${translateY}px,0)`
+        this.$refs.layer.style[transform] = `translate3d(0,${translateY}px,0)`
         const percent = Math.abs(newY / this.imageHeight)
         if (newY > 0) {
           scale = 1 + percent
@@ -88,8 +100,7 @@
         } else {
           blur = Math.min(20 * percent, 20)
         }
-        this.$refs.filter.style['backdrop-filter'] = `blur(${blur}px)`
-        this.$refs.filter.style['webkitBackdrop-filter'] = `blur(${blur}px)`
+        this.$refs.filter.style[backdrop] = `blur(${blur}px)`
         if (newY < this.minTranslateY) {
           zIndex = 10
           this.$refs.bgImage.style.paddingTop = 0
@@ -101,8 +112,7 @@
           this.$refs.playBtn.style.display = ''
         }
         this.$refs.bgImage.style.zIndex = zIndex
-        this.$refs.bgImage.style['transform'] = `scale(${scale})`
-        this.$refs.bgImage.style['webkitTransform'] = `scale(${scale})`
+        this.$refs.bgImage.style[transform] = `scale(${scale})`
       }
     },
     components: {
