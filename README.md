@@ -60,7 +60,7 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
   2、tab组件样式中添加.router-link-active作为页面跳转时选中的导航栏样式。
 轮播图组件制作：
   注意click事件和faskclick的冲突，这里如果click事件一定需要派发的话，可以在点击区域加上class="needsclick" 这样Fastclick就不会去监听这个事件，
-  mounted：是类似jq的ready,但是DOM生成的时候，由于数据是异步加载经来的所以存在，异步加载的dom还没执行，用setTimeOut做个延迟。
+  mounted：是类似jq的ready,但是DOM生成的时候，由于数据是异步加载经来的所以存在，异步加载的dom还没执行，用setTimeOut做个延迟。他的子组件DOM是否加载和父组件的mouted无关如果需要dom完全加载请使用"$nextTick(() => {})"
   destroyed：Vue 实例销毁后调用。调用后，Vue 实例指示的所有东西都会解绑定，所有的事件监听器会被移除，所有的子实例也会被销毁。(组件销毁，我的理解是在可视区域看不到了。)
 数据歌单列表：
   getDiscList是数据分发的接口(我的理解可以作为一个前端解决跨域的方案，有待考证)。
@@ -74,7 +74,7 @@ Loading：
   vue中只需要判断加载数据的长度就可以了，如果数据的长度没有获取到，继续loading
 listview组件：
   组件的使用：如果引用时采用的是ListView，那在template中就需要使用<list-view>。如果只是Listview，那<listview>就可以了，注意大小写。
-  在watch中检测data的参数，可以使用data中的参数名称+()括号内写入型参可以传入data中值的变化。
+  在watch中检测data的参数，可以使用data中的参数名称+(newVal, oldVal)括号内写入型参可以传入data中值的变化。
   `translate3d(0, ${fixedTop}px, 0)`es6的字符串模版。注意左右两边符号。
 配置子路由：
   src/router/index.js下的singer配置子路由。
@@ -117,10 +117,9 @@ vuex：
   import * as getters from './getters'
     这样就可以在下面使用getters.方法去调用。
   vuex的debug模式
-    线下调试
+    线下调试，通过NODE_ENV来指定环境，如果不是production就是生产环境
     const debug = process.env.NODE_ENV !== 'production'
-    'production': npm run build环境
-    'dev': npm run dev环境
+
     export default new Vuex.store({
       getters,
       strict: debug
@@ -157,4 +156,71 @@ vuex：
     @leave="leave"
     @after-leave="afterLeave"
   便可以在methods: {}中使用，其中enter(el, done)和leave(el, done)中done作为一个回调函数，执行完enter后会执行after-enter，leave也一样。this.$refs.cdWrapper.addEventListener('transitionend', done)使用transitionend监听done的执行
+
+阻止事件的冒泡
+  @click.stop=''，出现场景父及元素绑定一个事件，子级元算绑定一个事件，点击子级元素就可能会触发父及元素的事件，所以在自己元素的click.stop就可以阻止事件的冒泡(就像自定义下拉框一样，点击其他区域，下拉框收起来)
+
+created() {} 在实例创建完成后被立即调用。在这一步，实例已完成以下的配置：数据观测 (data observer)，属性和方法的运算，watch/event 事件回调。然而，挂载阶段还没开始，DOM元素并没有生成，在mouted之前。
+
+computed和watch的区别
+https://segmentfault.com/q/1010000009263244
+如果一个值依赖多个属性（多对一），用computed肯定是更加方便的。如果一个值变化后会引起一系列操作，或者一个值变化会引起一系列值的变化（一对多），用watch更加方便一些。
+
+svg 
+  <svg width="画布大小" height="画布大小" stroke-dasharray="画布的描边" stroke-dashpffset="描边的偏移" viewBox="舞台大小理解成百分比单位就行">
+
+<progressCircle radius="32" :percent="percent">是否有冒号取决于这个值是不是一个变量，这样传递的话会出现传递数字，被子组件解析成字符串，因为vue会把这个直接导成字符串，那就需要:radius="radius" data() {return {radius: 32}}，这样就可以变成number类型的。
+
+随机数
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min)
+}
+export function shuffle(arr) {
+  for (let i = 0; i < arr.length; i ++) {
+    let j = getRandomInt(0, 1)
+    let t = arr[i]
+    arr[i] = arr[j]
+    arr[j] = t
+  }
+
+  return arr
+}
+
+抓QQ音乐歌词这边真是遇到一个神坑，不知道为啥QQ音乐的的参数改变了，原先的做法是传songmid: mid，现在是传musicid: id
+
+$refs.$el 这个DOM的取法
+
+有一个点微信在后台的时候JS是不会执行的，这个坑目前的做法是添加计时器
+
+mixins多个组件需要运行同一个函数时，可以使用这个，
+  在common/js下定义一个 minxin.js内容如下。
+  import {mapGetters} from 'vuex'
+  export const playlistMixin = {
+    computed: {
+      ...mapGetters([
+        'playList'
+      ])
+    },
+    mounted() {
+      this.handlePlayList(this.playList)
+    },
+    activated() {
+      this.handlePlayList(this.playList)
+    },
+    watch: {
+      playList(newVal) {
+        this.handlePlayList(newVal)
+      }
+    },
+    methods: {
+      handlePlayList() {
+        throw new Error('component must implenent handlePlyaList method')
+      }
+    }
+  }
+  在组件中引用
+  import {playlistMixin} from '../../common/js/mixin'
+  注册
+  mixins: [playlistMixin],
+  之后在函数执行上面那些生命周期时他就会去调用。然后在组件中的methods方法需要加入handlePlayList()函数他就可以去引用，相同源的函数会去覆盖掉。这样原先定义中的就会抛出这个异常，如果在组件中有定义就可以覆盖这个异常。
 ```
