@@ -228,4 +228,22 @@ mixins多个组件需要运行同一个函数时，可以使用这个，
     这里有一个坑点，就是接口又被屏蔽了，然后只能只能使用axios去掉自己的dev-server.js的接口。
     这里我用了比较恶心的方式，就是用字符串切割把JSONP中括号的内容切割下来
     如果接口调整了回调函数，那这个地方又要修改。
+
+在组件中传递参数例如<template title="文字" :title1="h1">
+  第一个没有冒号，因为他是直接把文本放入，
+  第二个有冒号，因为h1是一个变量
+
+函数的截流(common/js/ytil.js)
+  export function debounce(func, delay) {
+    let timer
+    return function(...args) {
+      if (timer) {
+        clearTimeout(timer)
+      }
+      timer = setTimeout(() => {
+        func.apply(this, args)
+      }, delay)
+    }
+  }
+  传入一个函数，再穿出一个函数，
 ```
