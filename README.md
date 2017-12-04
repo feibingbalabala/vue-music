@@ -234,6 +234,7 @@ mixins多个组件需要运行同一个函数时，可以使用这个，
   第二个有冒号，因为h1是一个变量
 
 函数的截流(common/js/ytil.js)
+  ```
   export function debounce(func, delay) {
     let timer
     return function(...args) {
@@ -245,5 +246,11 @@ mixins多个组件需要运行同一个函数时，可以使用这个，
       }, delay)
     }
   }
+  ```
   传入一个函数，再穿出一个函数，
+
+slice()
+split()
+splice()
+pop()
 ```

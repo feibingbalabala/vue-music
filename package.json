@@ -24,6 +24,7 @@
     "vue-lazyload": "^1.0.3",
     "create-keyframe-animation": "^0.1.0",
     "js-base64": "^2.1.9",
+    "good-storage":"^1.0.1",
     "lyric-parser": "^1.0.1"
   },
   "devDependencies": {
