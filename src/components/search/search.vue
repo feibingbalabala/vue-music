@@ -4,7 +4,7 @@
       <search-box ref="searchBox" @query='onQueryCharge'></search-box>
     </div>
     <div ref="shortcutWrapper" class="shortcut-wrapper" v-show="!query">
-      <scroll class="shortcut" ref="shortcut" :data='shortcut'>
+      <scroll :refreshDelay='refreshDelay' class="shortcut" ref="shortcut" :data='shortcut'>
         <div>
           <div class="hot-key">
             <h1 class="title">热门搜索</h1>
@@ -41,27 +41,23 @@ import Suggest from '../suggest/suggest'
 import SearchList from '../../base/search-list/search-list'
 import confirm from '../../base/comfirm/comfirm'
 import Scroll from '../../base/scroll/scroll'
-import {playlistMixin} from '../../common/js/mixin'
-import {mapActions, mapGetters} from 'vuex'
+import {playlistMixin, searchMixin} from '../../common/js/mixin'
+import {mapActions} from 'vuex'
 
 export default {
-  mixins: [playlistMixin],
+  mixins: [playlistMixin, searchMixin],
   created() {
     this._getHotKey()
   },
   data() {
     return {
-      hotKey: [],
-      query: ''
+      hotKey: []
     }
   },
   computed: {
     shortcut() {
       return this.hotKey.concat(this.searchHistory)
-    },
-    ...mapGetters([
-      'searchHistory'
-    ])
+    }
   },
   methods: {
     handlePlayList(playlist) {
@@ -70,18 +66,6 @@ export default {
       this.$refs.shortcut.refresh()
       this.$refs.searchResult.style.bottom = bottom
       this.$refs.suggest.refresh()
-    },
-    addQuery(query) {
-      this.$refs.searchBox.setQuery(query)
-    },
-    onQueryCharge(query) {
-      this.query = query
-    },
-    blurInput() {
-      this.$refs.searchBox.blur()
-    },
-    saveSearch() {
-      this.saveSearchHistory(this.query)
     },
     deleteOne(item) {
       this.deleteSearchHistory(item)
@@ -100,8 +84,6 @@ export default {
       })
     },
     ...mapActions([
-      'saveSearchHistory',
-      'deleteSearchHistory',
       'clearSearchHistory'
     ])
   },

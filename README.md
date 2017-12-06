@@ -253,4 +253,7 @@ slice()
 split()
 splice()
 pop()
+
+阻止点击事件冒泡
+  <div @click.stop></div>后面不跟回调函数，这样可以直接阻止事件冒泡
 ```
