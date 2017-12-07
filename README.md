@@ -92,6 +92,7 @@ listview组件：
     }
   ]
   js的页面跳转可以使用this.$router.push({path: '路径'})
+  返回上一个页面this.$router.back()
 vuex：
   把信息，状态保存在同一个内存state里面，然后映射到vue的组件上，然后dispatch一个acition(用户的各种操作)，然后commit一个mutation，然后又反映到state上。也可以不通过dispatch直接commit一个mutation。
   解决：
