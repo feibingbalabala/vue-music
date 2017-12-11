@@ -258,3 +258,9 @@ pop()
 阻止点击事件冒泡
   <div @click.stop></div>后面不跟回调函数，这样可以直接阻止事件冒泡
 ```
+
+项目build好之后需要跑这个项目(利用express启动路由)
+1、在根目录新建文件，prod.server.js
+2、在config/index.js下的build添加port参数(端口号)
+3、设置静态目录：app.use(express, express.static('./dist'))
+4、node prod.server.js 搞定
