@@ -258,9 +258,31 @@ pop()
 阻止点击事件冒泡
   <div @click.stop></div>后面不跟回调函数，这样可以直接阻止事件冒泡
 ```
+项目打包
 
-项目build好之后需要跑这个项目(利用express启动路由)
-1、在根目录新建文件，prod.server.js
-2、在config/index.js下的build添加port参数(端口号)
-3、设置静态目录：app.use(express, express.static('./dist'))
-4、node prod.server.js 搞定
+  项目build好之后需要跑这个项目(利用express启动路由)
+  1、在根目录新建文件，prod.server.js
+  2、在config/index.js下的build添加port参数(端口号)
+  3、设置静态目录：app.use(express, express.static('./dist'))
+  4、node prod.server.js 搞定
+
+项目优化
+  路由懒加载
+    在router/index.js下修改项目组件的引入
+    ```
+    require.ensure() webpack特有的路由懒加载，但最后会被import所取代
+
+    const Recommend = (resolve) => {
+      import('components/recommend/recommend').then((moudule) => {
+        resolve(moudule)
+      })
+    }
+    ```
+
+项目升级
+  修改package.json文件的版本，然后npm install，注意'vue-template-compiler'的版本必须和vue的版本相同。
+
+移动端调试插件(vconsole)
+  在package.json 的devDependencies下添加"vconsolve": "^2.5.2",也就是开发时依赖的包。
+  然后在main.js包下引入import（这里我遇到了个小点，import任何组件都必须在业务逻辑之前）。
+  很奇葩，不知道为啥引用没用，也没有报错。
