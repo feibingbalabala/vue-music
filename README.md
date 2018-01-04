@@ -47,7 +47,10 @@ tab组件样式中添加.router-link-active作为页面跳转时选中的导航�
 是类似jq的ready,但是DOM生成的时候，由于数据是异步加载经来的所以存在，异步加载的dom还没执行，用setTimeOut做个延迟。他的子组件DOM是否加载和父组件的mounted无关如果需要dom完全加载请使用"$nextTick(() => {})"。
 
 ### destroyed：
-Vue 实例销毁后调用。调用后，Vue 实例指示的所有东西都会解绑定，所有的事件监听器会被移除，所有的子实例也会被销毁。(组件销毁，我的理解是在可视区域看不到了。)。
+Vue 实例销毁后调用。调用后，Vue 实例指示的所有东西都会解绑定，所有的事件监听器会被移除，所有的子实例也会被销毁。(组件销毁，我的理解是在可视区域看不到了。
+
+### created()
+在实例创建完成后被立即调用。在这一步，实例已完成以下的配置：数据观测 (data observer)，属性和方法的运算，watch/event 事件回调。然而，挂载阶段还没开始，DOM元素并没有生成，在mouted之前。
 
 ## 数据歌单列表：
 **getDiscList**是数据分发的接口(我的理解可以作为一个前端解决跨域的方案，有待考证)。<br/>
@@ -97,8 +100,9 @@ export default {
 ```
 
 ### ES6字符串模版
+```
 `translate3d(0, ${fixedTop}px, 0)`es6的字符串模版。注意左右两边符号。
-
+```
 ## 配置子路由：
 src/router/index.js下的singer配置子路由。(冒号是vue的绑定数据)
 ```
@@ -192,43 +196,42 @@ this.$emit('select', item, index)对外派发一个事件。父元素可监听�
   便可以在methods: {}中使用，其中enter(el, done)和leave(el, done)中done作为一个回调函数，执行完enter后会执行after-enter，leave也一样。this.$refs.cdWrapper.addEventListener('transitionend', done)使用transitionend监听done的执行。
   
 ## 阻止事件的冒泡
-@click.stop=''，出现场景父及元素绑定一个事件，子级元算绑定一个事件，点击子级元素就可能会触发父及元素的事件，所以在自己元素的click.stop就可以阻止事件的冒泡(就像自定义下拉框一样，点击其他区域，下拉框收起来)
+@click.stop=''，出现场景父及元素绑定一个事件，子级元算绑定一个事件，点击子级元素就可能会触发父及元素的事件，所以在自己元素的click.stop就可以阻止事件的冒泡(就像自定义下拉框一样，点击其他区域，下拉框收起来)。
 
-``` bash
+## computed和watch的区别
+[参考文献](https://segmentfault.com/q/1010000009263244)<br/>
+如果一个值依赖多个属性（多对一），用computed肯定是更加方便的。<br/>
+如果一个值变化后会引起一系列操作，或者一个值变化会引起一系列值的变化（一对多），用watch更加方便一些。
 
-created() {} 在实例创建完成后被立即调用。在这一步，实例已完成以下的配置：数据观测 (data observer)，属性和方法的运算，watch/event 事件回调。然而，挂载阶段还没开始，DOM元素并没有生成，在mouted之前。
+## svg
+```  
+<svg width="画布大小" height="画布大小" stroke-dasharray="画布的描边" stroke-dashpffset="描边的偏移" viewBox="舞台大小理解成百分比单位就行">
 
-computed和watch的区别
-https://segmentfault.com/q/1010000009263244
-如果一个值依赖多个属性（多对一），用computed肯定是更加方便的。如果一个值变化后会引起一系列操作，或者一个值变化会引起一系列值的变化（一对多），用watch更加方便一些。
-
-svg 
-  <svg width="画布大小" height="画布大小" stroke-dasharray="画布的描边" stroke-dashpffset="描边的偏移" viewBox="舞台大小理解成百分比单位就行">
-
+```
 <progressCircle radius="32" :percent="percent">是否有冒号取决于这个值是不是一个变量，这样传递的话会出现传递数字，被子组件解析成字符串，因为vue会把这个直接导成字符串，那就需要:radius="radius" data() {return {radius: 32}}，这样就可以变成number类型的。
 
-随机数
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1) + min)
-}
-export function shuffle(arr) {
-  for (let i = 0; i < arr.length; i ++) {
-    let j = getRandomInt(0, 1)
-    let t = arr[i]
-    arr[i] = arr[j]
-    arr[j] = t
-  }
+## 随机数
+```
+    function getRandomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1) + min)
+    }
+    // 交换歌曲位置，并没有去重
+    export function shuffle(arr) {
+      for (let i = 0; i < arr.length; i ++) {
+        let j = getRandomInt(0, 1)
+        let t = arr[i]
+        arr[i] = arr[j]
+        arr[j] = t
+      }
+    
+      return arr
+    }
+```
+## $refs.$el 这个DOM的取法
 
-  return arr
-}
-
-抓QQ音乐歌词这边真是遇到一个神坑，不知道为啥QQ音乐的的参数改变了，原先的做法是传songmid: mid，现在是传musicid: id
-
-$refs.$el 这个DOM的取法
-
-有一个点微信在后台的时候JS是不会执行的，这个坑目前的做法是添加计时器
-
-mixins多个组件需要运行同一个函数时，可以使用这个，
+## mixins
+### mixins多个组件需要运行同一个函数时，可以使用这个，
+```
   在common/js下定义一个 minxin.js内容如下。
   import {mapGetters} from 'vuex'
   export const playlistMixin = {
@@ -254,70 +257,105 @@ mixins多个组件需要运行同一个函数时，可以使用这个，
       }
     }
   }
-  在组件中引用
+```
+### 在组件中引用
   import {playlistMixin} from '../../common/js/mixin'
-  注册
+### 注册
   mixins: [playlistMixin],
   之后在函数执行上面那些生命周期时他就会去调用。然后在组件中的methods方法需要加入handlePlayList()函数他就可以去引用，相同源的函数会去覆盖掉。这样原先定义中的就会抛出这个异常，如果在组件中有定义就可以覆盖这个异常。
 
-  歌单页面制作
-    这里有一个坑点，就是接口又被屏蔽了，然后只能只能使用axios去掉自己的dev-server.js的接口。
-    这里我用了比较恶心的方式，就是用字符串切割把JSONP中括号的内容切割下来
-    如果接口调整了回调函数，那这个地方又要修改。
-
-在组件中传递参数例如<template title="文字" :title1="h1">
-  第一个没有冒号，因为他是直接把文本放入，
+## 组件中传递参数
+在组件中传递参数例如<template title="文字" :title1="h1"><br/>
+  第一个没有冒号，因为他是直接把文本放入，<br/>
   第二个有冒号，因为h1是一个变量
-
-函数的截流(common/js/ytil.js)
-  ```
-  export function debounce(func, delay) {
-    let timer
-    return function(...args) {
-      if (timer) {
-        clearTimeout(timer)
-      }
-      timer = setTimeout(() => {
-        func.apply(this, args)
-      }, delay)
-    }
-  }
-  ```
-  传入一个函数，再穿出一个函数，
-
-slice()
-split()
-splice()
-pop()
-
-阻止点击事件冒泡
-  <div @click.stop></div>后面不跟回调函数，这样可以直接阻止事件冒泡
+  
+## 函数的截流(common/js/ytil.js)
 ```
-项目打包
+    export function debounce(func, delay) {
+        let timer
+        return function(...args) {
+          if (timer) {
+            clearTimeout(timer)
+          }
+          timer = setTimeout(() => {
+            func.apply(this, args)
+          }, delay)
+        }
+      }
+```
+传入一个函数，再穿出一个函数。
 
-  项目build好之后需要跑这个项目(利用express启动路由)
-  1、在根目录新建文件，prod.server.js
-  2、在config/index.js下的build添加port参数(端口号)
-  3、设置静态目录：app.use(express, express.static('./dist'))
-  4、node prod.server.js 搞定
+## slice()
+### 定义
+slice() 方法可从已有的数组中返回选定的元素。
+### 用法
+arrayObject.slice(start,end)
+### 返回值
+返回一个新的数组，包含从 start 到 end （不包括该元素）的 arrayObject 中的元素。
 
-项目优化
-  路由懒加载
-    在router/index.js下修改项目组件的引入
-    ```
+## split()
+### 定义
+split() 方法用于把一个字符串分割成字符串数组。
+### 用法
+stringObject.split(separator,howmany)
+### 返回值
+一个字符串数组。该数组是通过在 separator 指定的边界处将字符串 stringObject 分割成子串创建的。返回的数组中的字串不包括 separator 自身。<br/>
+但是，如果 separator 是包含子表达式的正则表达式，那么返回的数组中包括与这些子表达式匹配的字串（但不包括与整个正则表达式匹配的文本）。
+
+## splice()
+### 定义
+splice() 方法向/从数组中添加/删除项目，然后返回被删除的项目。(该方法会改变原始数组。)
+### 用法
+arrayObject.splice(index,howmany,item1,.....,itemX)
+### 说明
+splice() 方法可删除从 index 处开始的零个或多个元素，并且用参数列表中声明的一个或多个值来替换那些被删除的元素。<br/>
+如果从 arrayObject 中删除了元素，则返回的是含有被删除的元素的数组。
+
+## pop()
+### 定义
+pop() 方法用于删除并返回数组的最后一个元素。
+### 用法
+arrayObject.pop()
+### 说明
+pop() 方法将删除 arrayObject 的最后一个元素，把数组长度减 1，并且返回它删除的元素的值。如果数组已经为空，则 pop() 不改变数组，并返回 undefined 值。
+
+## 阻止点击事件冒泡
+```
+    <div @click.stop></div>
+```
+后面不跟回调函数，这样可以直接阻止事件冒泡
+
+## 项目打包
+项目build好之后需要跑这个项目(利用express启动路由)。
+1. 在根目录新建文件，prod.server.js
+2. 在config/index.js下的build添加port参数(端口号)
+3. 设置静态目录：app.use(express, express.static('./dist'))
+4. node prod.server.js 搞定
+
+## 项目优化
+###  路由懒加载
+在router/index.js下修改项目组件的引入
+```
     require.ensure() webpack特有的路由懒加载，但最后会被import所取代
-
+    
     const Recommend = (resolve) => {
       import('components/recommend/recommend').then((moudule) => {
         resolve(moudule)
       })
     }
-    ```
+```
 
-项目升级
-  修改package.json文件的版本，然后npm install，注意'vue-template-compiler'的版本必须和vue的版本相同。
+## 项目升级
+ 修改package.json文件的版本，然后npm install，注意'vue-template-compiler'的版本必须和vue的版本相同。
 
-移动端调试插件(vconsole)
+## 移动端调试插件(vconsole)
   在package.json 的devDependencies下添加"vconsolve": "^2.5.2",也就是开发时依赖的包。
   然后在main.js包下引入import（这里我遇到了个小点，import任何组件都必须在业务逻辑之前）。
   很奇葩，不知道为啥引用没用，也没有报错。
+  
+## 坑
+1. 抓QQ音乐歌词这边真是遇到一个神坑，不知道为啥QQ音乐的的参数改变了，原先的做法是传songmid: mid，现在是传musicid: id。
+2. 有一个点微信在后台的时候JS是不会执行的，这个坑目前的做法是添加计时器。
+3. 歌单页面制作这里有一个坑点，就是接口又被屏蔽了，然后只能只能使用axios去掉自己的dev-server.js的接口。
+    这里我用了比较恶心的方式，就是用字符串切割把JSONP中括号的内容切割下来
+    如果接口调整了回调函数，那这个地方又要修改。
